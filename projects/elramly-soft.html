@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Elramly Soft Linux Infrastructure Lab | Abanoub Emad Makrem</title>
+  <meta name="description" content="A small-business Red Hat Enterprise Linux 9 and VirtualBox lab covering server baselines, networking, storage, services, users, permissions, ACLs, and sudo.">
+  <meta name="author" content="Abanoub Emad Makrem">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-home="../index.html">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html"><span>root@abanoub</span>:~$</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <ul class="nav-links" id="site-nav">
+        <li><a href="../index.html#home">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#certifications">Certifications</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <p class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="case-hero">
+      <div class="wrap">
+        <p class="crumbs"><a href="../index.html#projects">Projects</a> / Linux administration lab</p>
+        <p class="section-kicker">Red Hat Enterprise Linux 9 · VirtualBox</p>
+        <h1>Elramly Soft — Small Business IT Infrastructure Lab</h1>
+        <p class="lede">A small-business environment used to practice Linux server administration through baseline inspection, department account management, shared storage permissions, and role-based sudo. The lab is ongoing; its completed phases and planned work are listed separately below.</p>
+        <ul class="tags" aria-label="Project technologies">
+          <li>RHEL 9.0</li><li>VirtualBox</li><li>NetworkManager</li><li>systemd</li><li>POSIX permissions</li><li>ACLs</li><li>sudo</li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/AbanoubEmadM/small-business-it-infrastructure-lab" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a class="btn" href="../index.html#projects">All Projects</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap case-layout">
+      <nav class="toc" aria-label="On this page">
+        <span>CASE STUDY</span>
+        <a href="#overview">Overview</a>
+        <a href="#environment">Environment</a>
+        <a href="#phases">Implementation</a>
+        <a href="#considerations">Technical approach</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="#lessons">Lessons learned</a>
+        <a href="#repository">Repository</a>
+      </nav>
+
+      <div class="case-content">
+        <section class="case-section" id="overview">
+          <h2>Project Overview</h2>
+          <p>This educational lab applies Linux administration concepts to a small-business scenario. Work is organized into documented tasks: inspecting the server before making changes, then managing department accounts, shared directories, and administrative privileges.</p>
+          <div class="callout"><strong>Status:</strong> The project evidence marks the baseline and Linux administration phases complete. Service deployment, monitoring, backup, recovery, and further end-to-end testing remain planned; no completion claim is made for those items.</div>
+          <div class="facts">
+            <div class="fact"><b>RHEL 9.0</b><span>Virtual server hostname: rhel-server01</span></div>
+            <div class="fact"><b>12 accounts</b><span>Across four department groups</span></div>
+            <div class="fact"><b>Phase 1</b><span>Baseline inspection completed</span></div>
+            <div class="fact"><b>Phase 2</b><span>Linux administration completed</span></div>
+          </div>
+        </section>
+
+        <section class="case-section" id="environment">
+          <h2>Environment &amp; Architecture</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Component</th><th>Documented environment</th></tr></thead>
+              <tbody>
+                <tr><td>Server</td><td>Red Hat Enterprise Linux 9.0, hostname <code>rhel-server01</code></td></tr>
+                <tr><td>Virtualization</td><td>Oracle VirtualBox</td></tr>
+                <tr><td>Network mode</td><td>Bridged Adapter</td></tr>
+                <tr><td>Client</td><td>Windows 10</td></tr>
+                <tr><td>Server network interface</td><td><code>enp0s3</code>; address and gateway are redacted in project notes as <code>192.168.x.x</code></td></tr>
+                <tr><td>Shared data</td><td>Department directories organized under <code>/srv/company/</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The network inspection documented the existing interface, route, DNS, and NetworkManager profile. No fixed address, public deployment, or additional infrastructure service is claimed.</p>
+        </section>
+
+        <section class="case-section" id="phases">
+          <h2>Implementation Phases</h2>
+          <h3>Phase 1 — Server baseline inspection <span class="badge badge-hands">Completed</span></h3>
+          <ul class="clean">
+            <li>Identified the operating system, release, hostname, and VirtualBox environment.</li>
+            <li>Inspected interface and IP configuration, default route, DNS, and NetworkManager profile.</li>
+            <li>Reviewed partitions, filesystems, mount points, and utilization without changing storage configuration.</li>
+            <li>Verified that NetworkManager, <code>sshd</code>, and <code>firewalld</code> were active and enabled at the time of inspection. Firewall rule correctness and SSH hardening were not tested as part of this phase.</li>
+          </ul>
+          <h3>Phase 2 — Linux system administration <span class="badge badge-hands">Completed</span></h3>
+          <ul class="clean">
+            <li>Created four department groups and 12 corresponding employee accounts. The written task calls the IT group <code>it</code>, while captured terminal evidence uses <code>infrastructure</code>; the repository should reconcile that naming difference.</li>
+            <li>Organized department shares beneath <code>/srv/company/</code> with group ownership and SetGID permissions. A <code>0007</code> umask was documented to prevent default access for others.</li>
+            <li>Applied and inspected access/default ACLs for the development share, including the documented <code>oroberts</code> exception.</li>
+            <li>Documented role-based sudo: <code>oroberts</code> in <code>wheel</code>, limited selected command access for <code>mwilliams</code>, and no sudo assignment for <code>snguyen</code>.</li>
+          </ul>
+          <h3>Next work <span class="badge badge-study">Planned</span></h3>
+          <ul class="clean">
+            <li>Configure and test additional infrastructure services.</li>
+            <li>Add monitoring, backup, and recovery exercises.</li>
+            <li>Complete end-to-end testing and troubleshooting for the expanded environment.</li>
+          </ul>
+        </section>
+
+        <section class="case-section" id="considerations">
+          <h2>Technical Considerations &amp; Decisions</h2>
+          <ul class="clean">
+            <li><strong>Bridged networking:</strong> The VM appears as a separate device on the physical LAN, so any future static address must be checked against the LAN subnet and DHCP range. The documented address remains redacted.</li>
+            <li><strong>Storage baseline first:</strong> Separate <code>/</code>, <code>/boot</code>, and <code>/home</code> filesystems were inspected before planned service work; no storage changes were made during inspection.</li>
+            <li><strong>Shared department access:</strong> SetGID supports group inheritance for new files, while the documented <code>umask 0007</code> removes permissions for other users. ACL masks and default ACLs still need to be considered when validating effective access.</li>
+            <li><strong>Least-privilege administration:</strong> The sudo design separates full administrator, limited technician, and standard-user roles. The project documentation calls for checking sudoers syntax with <code>visudo -c</code> and reviewing each account's allowed commands.</li>
+          </ul>
+        </section>
+
+        <section class="case-section" id="screenshots">
+          <h2>Project Screenshots</h2>
+          <p>These images document the server baseline and the account and access-control tasks. Select an image to view it larger.</p>
+          <div class="shot-grid">
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-identity.png" data-caption="RHEL server identity and operating system">
+                <img src="../assets/images/projects/elramly-identity.png" alt="Terminal output identifying the RHEL 9 server and hostname">
+              </button>
+              <figcaption>Server identity and operating system</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-network.png" data-caption="Network interface and IP configuration inspection">
+                <img src="../assets/images/projects/elramly-network.png" alt="Terminal output inspecting the server network interface and IP configuration">
+              </button>
+              <figcaption>Network inspection</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-storage.png" data-caption="Disk, partition, and filesystem inspection">
+                <img src="../assets/images/projects/elramly-storage.png" alt="Terminal output showing RHEL disk partitions and filesystem mounts">
+              </button>
+              <figcaption>Disk and partition layout</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-services.png" data-caption="Status of NetworkManager, sshd, and firewalld">
+                <img src="../assets/images/projects/elramly-services.png" alt="Terminal output showing essential RHEL services as active and enabled">
+              </button>
+              <figcaption>Essential service status</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-groups.png" data-caption="Department group creation">
+                <img src="../assets/images/projects/elramly-groups.png" alt="Terminal output creating the four department groups">
+              </button>
+              <figcaption>Department groups</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-users.png" data-caption="Department user account management">
+                <img src="../assets/images/projects/elramly-users.png" alt="Terminal output creating and checking department user accounts">
+              </button>
+              <figcaption>User accounts</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-permissions.png" data-caption="Department directory permissions and ACL inspection">
+                <img src="../assets/images/projects/elramly-permissions.png" alt="Terminal output showing department directory permissions and access control lists">
+              </button>
+              <figcaption>Shared directory permissions and ACLs</figcaption>
+            </figure>
+            <figure class="figure">
+              <button class="zoom" type="button" data-lightbox data-full="../assets/images/projects/elramly-filesystem.png" data-caption="Shared filesystem layout">
+                <img src="../assets/images/projects/elramly-filesystem.png" alt="Terminal output showing RHEL filesystem capacity and utilization">
+              </button>
+              <figcaption>Filesystem utilization</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="case-section" id="lessons">
+          <h2>Lessons Learned</h2>
+          <ul class="clean">
+            <li>A system baseline makes later configuration and troubleshooting easier to reason about.</li>
+            <li>Linux groups, directory ownership, SetGID, umask, and ACLs work together to shape effective access.</li>
+            <li>Role-specific sudo is more precise than granting every IT user full administrative privileges.</li>
+            <li>Service state checks are not a substitute for validating firewall rules, SSH security, or end-to-end connectivity.</li>
+          </ul>
+        </section>
+
+        <section class="case-section" id="repository">
+          <h2>GitHub Repository</h2>
+          <p>The repository includes task documentation, phase screenshots, and a project README that tracks the lab's objectives and next steps.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://github.com/AbanoubEmadM/small-business-it-infrastructure-lab" target="_blank" rel="noopener noreferrer">Open GitHub Repository</a>
+            <a class="btn" href="../index.html#projects">Back to Projects</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><span class="prompt">root@abanoub:~$ </span>exit</p>
+      <p>© <span id="year">2026</span> Abanoub Emad Makrem · <a href="https://github.com/AbanoubEmadM" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="../index.html#projects">Portfolio</a></p>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Expanded image">
+    <div class="lightbox-bar">
+      <span id="lightbox-caption">Image</span>
+      <button class="icon-btn" type="button" data-close>Close</button>
+    </div>
+    <img id="lightbox-image" alt="">
+  </dialog>
+
+  <script src="../js/navigation.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>

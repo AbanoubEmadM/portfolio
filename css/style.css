@@ -893,6 +893,14 @@ a.contact-card:hover {
   padding: 42px 0 10px;
 }
 
+.case-hero h1 {
+  max-width: 860px;
+}
+
+.case-hero .tags {
+  margin-top: 16px;
+}
+
 .crumbs {
   font-family: var(--mono);
   font-size: 0.78rem;
@@ -911,6 +919,19 @@ a.contact-card:hover {
   gap: 28px;
   align-items: start;
   padding-top: 12px;
+}
+
+.case-content {
+  min-width: 0;
+}
+
+.case-content h3 {
+  margin: 20px 0 8px;
+  font-size: 1.05rem;
+}
+
+.case-content .facts {
+  margin: 18px 0;
 }
 
 .toc {
@@ -1035,6 +1056,17 @@ li code {
 .topo {
   border: 1px solid var(--border);
   border-radius: 10px;
+}
+
+.figure .zoom img {
+  width: 100%;
+  height: auto;
+}
+
+.shot-grid .figure .zoom img {
+  height: 190px;
+  object-fit: contain;
+  background: #f6f8fa;
 }
 
 .figure figcaption {

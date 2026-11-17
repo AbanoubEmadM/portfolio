@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Multi-Site Enterprise Network Lab | Abanoub Emad Makrem</title>
+  <meta name="description" content="A Cisco Packet Tracer enterprise campus, data center, and WAN lab covering VLANs, VLSM, Layer 3 switching, static routing, and connectivity verification.">
+  <meta name="author" content="Abanoub Emad Makrem">
+  <meta name="theme-color" content="#0d1117">
+  <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-home="../index.html">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="../index.html"><span>root@abanoub</span>:~$</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <ul class="nav-links" id="site-nav">
+        <li><a href="../index.html#home">Home</a></li>
+        <li><a href="../index.html#about">About</a></li>
+        <li><a href="../index.html#skills">Skills</a></li>
+        <li><a href="../index.html#projects">Projects</a></li>
+        <li><a href="../index.html#certifications">Certifications</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+      <p class="status"><i aria-hidden="true"></i> SYSTEM ONLINE</p>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="case-hero">
+      <div class="wrap">
+        <p class="crumbs"><a href="../index.html#projects">Projects</a> / Network architecture lab</p>
+        <p class="section-kicker">Cisco Packet Tracer · configured and verified</p>
+        <h1>Multi-Site Enterprise Campus &amp; Data Center Network</h1>
+        <p class="lede">A production-inspired learning topology connecting an HQ campus, a data center, and a simulated WAN/Internet edge. The network was implemented and tested in Cisco Packet Tracer; it is not a physically deployed production network.</p>
+        <ul class="tags" aria-label="Project technologies">
+          <li>Cisco Packet Tracer</li><li>IPv4 / VLSM</li><li>VLANs</li><li>802.1Q</li><li>SVIs</li><li>Static routing</li>
+        </ul>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/AbanoubEmadM/multi-site-enterprise-lab" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+          <a class="btn" href="../index.html#projects">All Projects</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="wrap case-layout">
+      <nav class="toc" aria-label="On this page">
+        <span>CASE STUDY</span>
+        <a href="#overview">Overview</a>
+        <a href="#topology">Topology</a>
+        <a href="#addressing">Address plan</a>
+        <a href="#decisions">Design decisions</a>
+        <a href="#configuration">Configuration</a>
+        <a href="#verification">Verification</a>
+        <a href="#repository">Repository &amp; run</a>
+      </nav>
+
+      <div class="case-content">
+        <section class="case-section" id="overview">
+          <h2>Project Overview</h2>
+          <p>The lab models three routed domains: a headquarters campus for Sales and Engineering, a data center for Web and Database servers, and a WAN/Internet edge. Layer 3 switches provide local VLAN gateways, while a central router connects the sites and a simulated ISP.</p>
+          <div class="facts">
+            <div class="fact"><b>3 domains</b><span>HQ, data center, WAN/edge</span></div>
+            <div class="fact"><b>5 VLAN IDs</b><span>10, 20, 40, 50, and 99</span></div>
+            <div class="fact"><b>172.16.0.0/16</b><span>Host and server address block</span></div>
+            <div class="fact"><b>8.8.8.8/32</b><span>Simulated ISP loopback target</span></div>
+          </div>
+        </section>
+
+        <section class="case-section" id="topology">
+          <h2>Network Topology</h2>
+          <p>The HQ and data center cores route their local VLANs and connect to a central WAN router using routed point-to-point links. The WAN router forwards toward an ISP edge, where a loopback provides a deterministic external test target.</p>
+          <figure class="figure">
+            <button class="zoom" type="button" data-lightbox data-full="../assets/images/diagrams/multi-site-topology.png" data-caption="Cisco Packet Tracer topology: HQ campus, data center, WAN router, and ISP edge">
+              <img src="../assets/images/diagrams/multi-site-topology.png" alt="Cisco Packet Tracer topology showing Sales and Engineering VLANs at HQ, Web and Database server VLANs at the data center, and routed WAN and ISP links">
+            </button>
+            <figcaption>Packet Tracer topology. Select the diagram to expand it.</figcaption>
+          </figure>
+          <h3>Network domains</h3>
+          <ul class="clean">
+            <li><strong>Headquarters:</strong> access/core hierarchy with Sales (VLAN 10) and Engineering (VLAN 20).</li>
+            <li><strong>Data center:</strong> dedicated core and access switching for Web (VLAN 40) and Database (VLAN 50) server networks.</li>
+            <li><strong>WAN and edge:</strong> central WAN router, ISP edge router, routed point-to-point links, and Loopback0 at <code>8.8.8.8/32</code>.</li>
+            <li><strong>Management planning:</strong> VLAN 99 is used as the custom native VLAN on documented trunks and appears in some allowed-VLAN lists. The supplied configurations do not show a VLAN 99 SVI or verified switch-management reachability, so a separate management plane is not claimed as complete.</li>
+          </ul>
+        </section>
+
+        <section class="case-section" id="addressing">
+          <h2>IP Addressing &amp; VLAN Allocation</h2>
+          <p>VLSM divides the <code>172.16.0.0/16</code> block into host networks sized for each department or server group. Point-to-point router and core links use <code>10.255.0.0/30</code> subnets.</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Site</th><th>VLAN</th><th>Network</th><th>Mask</th><th>Gateway</th><th>Usable host range</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>HQ Sales</td><td>10</td><td><code>172.16.0.0/25</code></td><td><code>255.255.255.128</code></td><td><code>172.16.0.1</code></td><td><code>172.16.0.2–126</code></td></tr>
+                <tr><td>HQ Engineering</td><td>20</td><td><code>172.16.0.128/26</code></td><td><code>255.255.255.192</code></td><td><code>172.16.0.129</code></td><td><code>172.16.0.130–190</code></td></tr>
+                <tr><td>DC Web servers</td><td>40</td><td><code>172.16.0.192/27</code></td><td><code>255.255.255.224</code></td><td><code>172.16.0.193</code></td><td><code>172.16.0.194–222</code></td></tr>
+                <tr><td>DC Database servers</td><td>50</td><td><code>172.16.0.224/28</code></td><td><code>255.255.255.240</code></td><td><code>172.16.0.225</code></td><td><code>172.16.0.226–238</code></td></tr>
+                <tr><td>Management plan</td><td>99</td><td>Variable</td><td><code>/24</code> planned</td><td>Not documented</td><td>Not documented</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Point-to-point link</th><th>Subnet</th><th>Endpoint A</th><th>Endpoint B</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>ISP edge ↔ WAN router</td><td><code>10.255.0.0/30</code></td><td>ISP edge <code>10.255.0.2</code></td><td>WAN router <code>10.255.0.1</code></td></tr>
+                <tr><td>HQ core ↔ WAN router</td><td><code>10.255.0.4/30</code></td><td>HQ core <code>10.255.0.5</code></td><td>WAN router <code>10.255.0.6</code></td></tr>
+                <tr><td>DC core ↔ WAN router</td><td><code>10.255.0.8/30</code></td><td>DC core <code>10.255.0.9</code></td><td>WAN router <code>10.255.0.10</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <figure class="figure">
+            <div class="topo" aria-label="WAN point-to-point link map">
+              <p class="domain-label">WAN /30 interconnects</p>
+              <div class="topo-stack">
+                <div class="topo-split">
+                  <article class="node hq"><h3>HQ-Core</h3><p>10.255.0.5/30</p></article>
+                  <article class="node wan"><h3>WAN-Router</h3><p>10.255.0.6/30</p></article>
+                </div>
+                <p class="link-label">10.255.0.4/30 · HQ ↔ WAN</p>
+                <div class="topo-split">
+                  <article class="node dc"><h3>DC-Core</h3><p>10.255.0.9/30</p></article>
+                  <article class="node wan"><h3>WAN-Router</h3><p>10.255.0.10/30</p></article>
+                </div>
+                <p class="link-label">10.255.0.8/30 · DC ↔ WAN</p>
+                <div class="topo-split">
+                  <article class="node wan"><h3>WAN-Router</h3><p>10.255.0.1/30</p></article>
+                  <article class="node eng"><h3>ISP-Edge</h3><p>10.255.0.2/30 · Loopback0 8.8.8.8/32</p></article>
+                </div>
+                <p class="link-label">10.255.0.0/30 · WAN ↔ ISP</p>
+              </div>
+            </div>
+            <figcaption>Routed WAN links and endpoint addresses from the documented device configurations.</figcaption>
+          </figure>
+        </section>
+
+        <section class="case-section" id="decisions">
+          <h2>Architectural Decisions</h2>
+          <ol class="clean">
+            <li><strong>SVIs for local routing:</strong> HQ and data center Layer 3 switches provide VLAN gateways, keeping inter-VLAN routing local rather than sending it through a router-on-a-stick link.</li>
+            <li><strong>VLSM for address allocation:</strong> Separate prefix lengths fit the documented Sales, Engineering, Web, and Database subnets without assigning each a full <code>/24</code>.</li>
+            <li><strong>/30 point-to-point networks:</strong> Each routed interconnect has two usable endpoint addresses and remains distinct from host VLANs.</li>
+            <li><strong>Routed core-to-WAN links:</strong> Core switch ports facing the WAN router use <code>no switchport</code>, creating Layer 3 boundaries between campus switching and the WAN.</li>
+            <li><strong>Custom native VLAN:</strong> Trunks specify VLAN 99 instead of the default VLAN 1. This is a configuration choice, not by itself proof of VLAN isolation or a complete trunk-security control.</li>
+            <li><strong>ISP loopback test target:</strong> Loopback0 at <code>8.8.8.8/32</code> gives the simulation a stable endpoint for checking default-route forwarding; it is not a connection to the public Internet.</li>
+          </ol>
+        </section>
+
+        <section class="case-section" id="configuration">
+          <h2>Device Configuration</h2>
+          <p>Selected excerpts from the supplied device configurations show the local SVIs, routed uplink, and static routes. Full configuration exports and the Packet Tracer topology are available in the repository.</p>
+          <div class="config">
+            <header>HQ-Core — VLAN gateways and routed WAN uplink</header>
+            <pre><code>ip routing
+interface FastEthernet0/3
+ no switchport
+ ip address 10.255.0.5 255.255.255.252
+interface Vlan10
+ ip address 172.16.0.1 255.255.255.128
+interface Vlan20
+ ip address 172.16.0.129 255.255.255.192</code></pre>
+          </div>
+          <div class="config">
+            <header>WAN-Router — site routes and simulated default route</header>
+            <pre><code>ip route 172.16.0.0 255.255.255.128 10.255.0.5
+ip route 172.16.0.128 255.255.255.192 10.255.0.5
+ip route 172.16.0.192 255.255.255.224 10.255.0.9
+ip route 172.16.0.224 255.255.255.240 10.255.0.9
+ip route 0.0.0.0 0.0.0.0 10.255.0.2</code></pre>
+          </div>
+        </section>
+
+        <section class="case-section" id="verification">
+          <h2>Verification &amp; Testing</h2>
+          <p>The documented tests originate from the HQ Sales PC. These results validate connectivity inside the Packet Tracer simulation only.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Target</th><th>Address</th><th>Documented result</th></tr></thead>
+              <tbody>
+                <tr><td>HQ Sales gateway</td><td><code>172.16.0.1</code></td><td>Ping reply received</td></tr>
+                <tr><td>HQ Engineering host</td><td><code>172.16.0.130</code></td><td>Ping reply received</td></tr>
+                <tr><td>DC Database server</td><td><code>172.16.0.226</code></td><td>Ping reply received</td></tr>
+                <tr><td>Simulated ISP endpoint</td><td><code>8.8.8.8</code></td><td>Ping reply received</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="config">
+            <header>Documented traceroute path to the simulated endpoint</header>
+            <pre><code>1  172.16.0.1  HQ-Core SVI 10 gateway
+2  10.255.0.6  WAN-Router
+3  10.255.0.2  ISP-Edge
+4  8.8.8.8     ISP Loopback0</code></pre>
+          </div>
+        </section>
+
+        <section class="case-section" id="repository">
+          <h2>Repository Structure &amp; Deployment</h2>
+          <p>The repository contains the Packet Tracer <code>.pkt</code> topology, device configuration exports, a topology diagram, and project documentation.</p>
+          <pre class="path">multi-site-enterprise-lab/
+├── config/
+│   ├── DC-AS1.txt
+│   ├── DC-Core.txt
+│   ├── HQ-AS1.txt
+│   ├── HQ-AS2.txt
+│   ├── HQ-Core.txt
+│   ├── ISP-Edge.txt
+│   └── WAN-Router.txt
+├── diagrams/
+│   └── topology.png
+├── topologies/
+│   └── MultiSite_Enterprise.pkt
+└── Readme.md</pre>
+          <h3>Deployment Instructions</h3>
+          <ol class="clean">
+            <li>Clone <a href="https://github.com/AbanoubEmadM/multi-site-enterprise-lab" target="_blank" rel="noopener noreferrer">the project repository</a>.</li>
+            <li>Open <code>topologies/MultiSite_Enterprise.pkt</code> in Cisco Packet Tracer 8.0 or later.</li>
+            <li>Compare device running configurations with the text files under <code>config/</code>.</li>
+            <li>From <code>PC1-Sales1</code>, test the documented routes with <code>ping 8.8.8.8</code> or <code>tracert 8.8.8.8</code>.</li>
+          </ol>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://github.com/AbanoubEmadM/multi-site-enterprise-lab" target="_blank" rel="noopener noreferrer">Open GitHub Repository</a>
+            <a class="btn" href="../index.html#projects">Back to Projects</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p><span class="prompt">root@abanoub:~$ </span>exit</p>
+      <p>© <span id="year">2026</span> Abanoub Emad Makrem · <a href="https://github.com/AbanoubEmadM" target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="../index.html#projects">Portfolio</a></p>
+    </div>
+  </footer>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Expanded image">
+    <div class="lightbox-bar">
+      <span id="lightbox-caption">Image</span>
+      <button class="icon-btn" type="button" data-close>Close</button>
+    </div>
+    <img id="lightbox-image" alt="">
+  </dialog>
+
+  <script src="../js/navigation.js"></script>
+  <script src="../js/script.js"></script>
+</body>
+</html>
